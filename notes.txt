@@ -1,0 +1,24 @@
+bbdb app
+
+BACKEND TASKS
+  - Write api endpoints for: 
+    - getPlayers (return the top 300) - how do we classify top 300?
+    - getPlayerStats
+    - getTeams
+    - getProjections
+  - Setup serverless architecture 
+  - Move local MongoDB to Atlas
+  - Crawl and update script for STEAMER Projections
+  - Crawl script for ADP, may be able to use the above script for both
+  - Might want to update db architecture for performance, the following could come from 1 table:
+
+  rk | player | team | r | rbi | hr | sb | obp | avg | w | svhd | k | era | whip
+
+Pete Alonso: 19251 -- ids dont match across tables, must use first-last to match players 
+
+FRONTEND
+  √ Setup vue3 app 
+  - use my component library
+  - create a table with all 300 players and their projections for 2021
+  - click on player to bring up modal with player stats history
+
