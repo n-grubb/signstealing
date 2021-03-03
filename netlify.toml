@@ -1,0 +1,7 @@
+[build]
+  functions = "functions/"
+  
+[dev]
+  publish = "dist" 
+  framework = "#static"
+  

@@ -1,8 +1,19 @@
 <template>
-  <h1>bbdb</h1>  
+  <AppHeader />
+  <main>
+    <router-view v-slot="{ Component }">
+      <transition name="fade">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </main>
 </template>
 
 <script>
+import AppHeader from './components/AppHeader/AppHeader.vue'
+export default {
+  components: { AppHeader }
+}
 </script>
 
 <style>
@@ -12,6 +23,9 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+main {
+  padding: 0 var(--space-xl);
 }
 </style>
