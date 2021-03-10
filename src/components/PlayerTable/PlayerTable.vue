@@ -1,10 +1,12 @@
 <script>
+import Table from '../Table/Table.vue'
 import playerProjections from './player-projections.json'
 
 export default {
-    data() {
+	components: { Table },
+  data() {
 		return {
-	    	filters: {},
+	    filters: {},
 			positions: [ 'C', '1B', '2B', 'SS', '3B', 'OF', 'SP', 'RP' ],
 			selectedPositionFilters: []
 		}
@@ -41,9 +43,7 @@ export default {
 	},
 	methods: {
 		togglePositionFilter(position) {
-			console.log(`${position} clicked.`)
 			const filterIndex = this.selectedPositionFilters.indexOf(position)
-			console.log(filterIndex)
 			if (filterIndex >= 0) {
 				this.selectedPositionFilters.splice(filterIndex, 1)
 			} else {
@@ -72,7 +72,7 @@ export default {
 		 {{ position }}
 		</li>
 	</ul>
-	<ToolboxTable
+	<Table
 		class="player-table"
 		:columns="columns"
 		:data="players"
@@ -81,6 +81,7 @@ export default {
 		emptyCellContent=" "
 		stickyHeader
 		stickyFirstColumn
+		draggable
 	/>
 </template>
 

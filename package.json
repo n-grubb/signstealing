@@ -7,13 +7,14 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@n-grubb/toolbox": "^0.0.9",
-    "vue": "^3.0.5",
-    "vue-router": "^4.0.4"
+    "@n-grubb/toolbox": "0.1.8",
+    "vue": "^3.0.7",
+    "vue-router": "^4.0.4",
+    "vuedraggable": "^4.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.1.4",
-    "@vue/compiler-sfc": "^3.0.5",
+    "@vue/compiler-sfc": "^3.0.7",
     "vite": "^2.0.0-beta.65"
   }
 }
