@@ -1,3 +1,11 @@
+<script>
+import AuthButton from '@/components/AuthButton/AuthButton.vue'
+
+export default {
+	components: { AuthButton }
+}
+</script>
+
 <template>
 	<header class="app-header">
 		<h1 class="app-header__title">SignStealing</h1> 
@@ -5,6 +13,9 @@
 			<router-link to="rank">Rank</router-link>
 			<!-- <router-link to="draft" disabled>Draft</router-link> -->
 		</nav>
+		<div class="auth">
+			<AuthButton />
+		</div>
 	</header>
 </template>
 
@@ -12,6 +23,7 @@
 .app-header {
 	display: grid;
 	grid-template: auto auto / auto auto;
+	grid-gap: 2rem;
 	justify-content: flex-start;
 	padding: var(--space-xl);
 	margin-top: var(--space);
@@ -47,5 +59,10 @@
 
 .site-nav a.router-link-active {
 	border-bottom: var(--border-thickness) solid var(--accent);
+}
+
+.auth {
+	grid-row: 1;
+	grid-column: 2;
 }
 </style>

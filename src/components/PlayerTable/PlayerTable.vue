@@ -51,13 +51,6 @@ export default {
 			}
 		}
 	}
-    // created() {
-		// // When the app is created, fetch players from the api.
-		// fetch('/.netlify/functions/api/players')
-		//   .then(response => response.json())
-		//   .then(data => this.players = data.players)
-		//   .catch(error => alert(error))
-	// }
 }
 </script>
 
