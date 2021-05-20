@@ -9,17 +9,24 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.13.6",
     "@n-grubb/toolbox": "0.1.8",
+    "@urql/vue": "^0.3.0",
+    "graphql": "^15.5.0",
+    "primeicons": "^4.1.0",
+    "primevue": "^3.3.5",
+    "realm-web": "^1.2.1",
     "vue": "^3.0.7",
     "vue-router": "^4.0.4",
     "vuedraggable": "^4.0.1",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
+    "@iconify/json": "^1.1.321",
     "@vitejs/plugin-vue": "^1.1.4",
     "@vue/compiler-sfc": "^3.0.7",
     "autoprefixer": "^10.2.5",
     "postcss": "^8.2.8",
     "tailwindcss": "^2.0.3",
-    "vite": "^2.0.0-beta.65"
+    "vite": "^2.0.0-beta.65",
+    "vite-plugin-icons": "^0.3.2"
   }
 }

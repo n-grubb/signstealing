@@ -1,4 +1,5 @@
-import vue from '@vitejs/plugin-vue'
+import Vue from '@vitejs/plugin-vue'
+import Icons from 'vite-plugin-icons'
 import path from 'path'
 
 /**
@@ -6,7 +7,10 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default {
-  plugins: [vue()],
+  plugins: [
+    Vue(),
+    Icons()
+  ],
   resolve: {
     alias: [
       {

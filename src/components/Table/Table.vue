@@ -354,7 +354,7 @@ export default {
     calculateColumnWidth(column) {
       // Read min and max from the column.
       const columnWidthStyles = {
-        width: '', // setup empty property to be used if even distribution is turned on.
+        width: '', // will be overwritten if even distribution is turned on.
         minWidth: column.minWidth ? `${column.minWidth}px` : '80px', // ensure we have a sensible default min width
         maxWidth: column.maxWidth ? `${column.maxWidth}px` : undefined
       }
@@ -386,7 +386,14 @@ export default {
     },
 
     formatCellContent(cellValue) {
-      return Array.isArray(cellValue) ? cellValue.join(' | ') : cellValue 
+      return Array.isArray(cellValue) 
+        ? cellValue.join(' | ') 
+        : cellValue 
+    },
+
+    handleDragChange(e) {
+      console.log(e)
+      this.$emit('dragChange', this.sortedData)
     }
   }
 }
@@ -425,8 +432,9 @@ export default {
             role="columnheader"
             scope="col"
             @click="sortBy(column)"
+            :style="calculateColumnWidth(column)"
           >
-            <div :style="calculateColumnWidth(column)">
+            <div>
               {{ column.label }}
               <Caret
                 v-if="sortedBy === column.name"
@@ -451,7 +459,7 @@ export default {
         tag="tbody"
         drag-class="drag-item"
         ghost-class="drag-ghost"
-        @change="$emit('drag-change', sortedData)"
+        @change="handleDragChange"
       >
         <template #item="{ element, index }">
           <tr>
@@ -521,6 +529,7 @@ export default {
   border-radius: var(--table-border-radius, var(--border-radius));
   background: var(--table-bg-color, var(--white, white));
   overflow: auto;
+  box-sizing: content-box;
 }
 
 /* FOCUS 
@@ -666,7 +675,7 @@ export default {
 .tb-table.numbered.sticky-col th:nth-child(2), 
 .tb-table.numbered.sticky-col td:nth-of-type(2) {
   position: sticky;
-  left: calc(var(--numbered-col-width) - 5px);
+  left: var(--numbered-col-width);
   z-index: 1;
 }
 

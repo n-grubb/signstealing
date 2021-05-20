@@ -1,53 +1,78 @@
 <script>
+import PositionFilter from '@/components/PositionFilter/PositionFilter.vue'
 import Table from '../Table/Table.vue'
-import playerProjections from './player-projections.json'
 
 export default {
-	components: { Table },
+	components: { PositionFilter, Table },
+	props: {
+		players: {
+			type: Array,
+			required: true
+		},
+		columns: {
+			type: Array,
+			required: true
+		},
+		positions: {
+			type: Array,
+			default: []
+		},
+		header: {
+			type: String,
+			default: 'Players'
+		},
+		size: {
+			type: String,
+			default: 'large'
+		},
+		editing: {
+			type: Boolean,
+			default: false
+		}
+	},
   data() {
 		return {
 	    filters: {},
-			positions: [ 'C', '1B', '2B', 'SS', '3B', 'OF', 'SP', 'RP' ],
-			selectedPositionFilters: []
+			hiddenColumns: [],
+			selectedPositionFilters: [],
+			newRanking: [] // holder for ranking changes
 		}
 	},
 	computed: {
-		columns() {
-			// filters? 
-			return [
-				{ name: 'name', label: 'NAME', sticky: true, align: 'left', minWidth: 200 },
-				{ name: 'team', label: 'TEAM' },
-				{ name: 'pos', label: 'POS', sortable: true },
-				{ name: 'ADP', label: 'ADP', sortable: true, maxWidth: 100 },
-				{ name: 'R', label: 'R', sortable: true },
-				{ name: 'HR', label: 'HR', sortable: true },
-				{ name: 'RBI', label: 'RBI', sortable: true },
-				{ name: 'SB', label: 'SB', sortable: true },
-				{ name: 'OBP', label: 'OBP', sortable: true },
-				{ name: 'IP', label: 'IP', sortable: true },
-				{ name: 'K', label: 'K', sortable: true },
-				{ name: 'SV', label: 'SV', sortable: true },
-				{ name: 'ERA', label: 'ERA', sortable: true },
-				{ name: 'WHIP', label: 'WHIP', sortable: true },
-			]
+		tableColumns() {
+			return columns.filter(column => !hiddenColumns.include(column))
 		},
 
-		players() {
-			if (this.selectedPositionFilters.length > 0) {
-				return playerProjections.filter(player => (
+		playersFiltered() {
+			return (this.selectedPositionFilters.length > 0) 
+				? this.players.filter(player => (
 					player.pos && player.pos.some(position => this.selectedPositionFilters.includes(position)) 
 				))
-			}
-			return playerProjections
+				: this.players
 		}
 	},
 	methods: {
-		togglePositionFilter(position) {
-			const filterIndex = this.selectedPositionFilters.indexOf(position)
-			if (filterIndex >= 0) {
-				this.selectedPositionFilters.splice(filterIndex, 1)
-			} else {
-				this.selectedPositionFilters.push(position)
+		togglePosition(payload) {
+			this.selectedPositionFilters = payload
+		},
+
+		updateRanking(received) {
+			console.log('New Ranking:', received)
+			const newRanking = received.map((player,index) => {
+				return { 
+					rank: index,
+					player: player.name,
+					playerId: player._id
+				}
+			})
+			this.newRanking = newRanking
+		}
+	},
+	watch: {
+		// remap old value and new value to more easily understood labels
+		editing(isEditing, wasEditing) {
+			if (wasEditing && !isEditing) {
+				this.$emit('ranking-updated', this.newRanking)
 			}
 		}
 	}
@@ -55,56 +80,79 @@ export default {
 </script>
 
 <template>
-	<ul class="position-filters">
-		<li 
-			v-for="position in positions"
-			:key="position"
-			:class="{ 'filter-active': selectedPositionFilters.includes(position) }"
-			@click="togglePositionFilter(position)"
-		>
-		 {{ position }}
-		</li>
-	</ul>
-	<Table
-		class="player-table"
-		:columns="columns"
-		:data="players"
-		numbered
-		numberedLabel="Rk"
-		emptyCellContent=" "
-		stickyHeader
-		stickyFirstColumn
-		draggable
-	/>
+	<div :class="`player-table ${size}`">
+		<h5 class="player-table__header">{{ header }}</h5>
+		<div class="table-toolbar">
+			<PositionFilter 
+				v-if="positions.length > 1"
+				:positions="positions" 
+				@change="togglePosition"
+			/>
+		</div>
+		<Table
+			class="player-table"
+			:columns="columns"
+			:data="playersFiltered"
+			numbered
+			numberedLabel="Rk"
+			emptyCellContent=" "
+			stickyHeader
+			stickyFirstColumn
+			:draggable="editing"
+			@drag-change="updateRanking"
+		/>
+	</div>
 </template>
 
-<style scoped>
-.position-filters {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
+<style lang="postcss">
+.player-table {
+	--table-header-bg-color: var(--neutral-lighter);
+	--empty-cell-bg: var(--neutral-lighter);
+	/* --table-scrollable-border:  */
 }
 
-.position-filters li {
-	padding: var(--space-xs);
-	font-size: var(--text-sm);
-	font-weight: var(--font-light);
-	position: relative;
-	cursor: pointer;
-}
-
-.position-filters li.filter-active {
-	color: var(--accent);
+.player-table__header {
+	font-size: var(--text-xl);
 	font-weight: var(--font-bold);
 }
 
-.position-filters li + li:after {
-	content: '';
-	position: absolute;
-	left: 0;
-	width: 1px;
-	height: 50%;
-	margin: auto;
-	background-color: var(--neutral);
+.player-table th div {
+	border-bottom: 1px solid var(--neutral-light);
+}
+
+.tb-table {
+	@apply shadow;
+	margin-top: var(--space);
+}
+
+.tb-table table {
+	margin-right: 0 !important;
+}
+
+.player-table .tb-table td {
+	border-bottom: 1px solid var(--neutral-light);
+	font-weight: var(--font-light);
+}
+
+.player-table.large {
+	--table-cell-padding: var(--space-sm);
+}
+
+.player-table.medium {
+	--table-cell-padding: var(--space-xs);
+}
+
+.player-table.medium th, 
+.player-table.medium td {
+	font-size: var(--text-sm);
+}
+
+.player-table.small {
+	--table-cell-padding: var(--space-xxs);
+}
+
+.player-table.small th, 
+.player-table.small td {
+	font-size: var(--text-xs);
 }
 </style>
